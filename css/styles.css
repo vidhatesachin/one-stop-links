@@ -172,11 +172,11 @@ body {
     color: #e91e63;
 }
 .link-button.pinterest {
-    background: #e60023;
+    background: linear-gradient(135deg, #ffe5ec 0%, #e60023 100%);
     color: #fff;
 }
 .link-button.pinterest:hover {
-    background: #ad081b;
+    background: linear-gradient(135deg, #e60023 0%, #ad081b 100%);
 }
 /* Platform-specific colors - Hover State */
 .link-button.instagram:hover {
