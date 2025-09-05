@@ -171,7 +171,13 @@ body {
     background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
     color: #e91e63;
 }
-
+.link-button.pinterest {
+    background: #e60023;
+    color: #fff;
+}
+.link-button.pinterest:hover {
+    background: #ad081b;
+}
 /* Platform-specific colors - Hover State */
 .link-button.instagram:hover {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
