@@ -172,12 +172,25 @@ body {
     color: #e91e63;
 }
 .link-button.pinterest {
-    background: linear-gradient(135deg, #ffe5ec 0%, #e60023 100%);
+    background: linear-gradient(135deg, #ffd6dc 0%, #f04a5b 100%);
     color: #fff;
 }
 .link-button.pinterest:hover {
-    background: linear-gradient(135deg, #e60023 0%, #ad081b 100%);
+    background: linear-gradient(135deg, #f04a5b 0%, #c81e2f 100%);
 }
+
+.link-button.twitter {
+    background: linear-gradient(135deg, #e8f5fd 0%, #cce7f6 100%);
+    color: #1DA1F2;
+}
+
+.link-button.twitter:hover {
+    background: linear-gradient(135deg, #1DA1F2 0%, #0d8dd9 100%);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+}
+
 /* Platform-specific colors - Hover State */
 .link-button.instagram:hover {
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
