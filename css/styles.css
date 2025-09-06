@@ -234,24 +234,30 @@ body {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
 }
-/* ...existing code... */
+
 .link-button.google-business {
-    background: linear-gradient(135deg, #fffbe5 0%, #ffe066 100%);
-    color: #1a73e8; /* Google blue */
+    background: linear-gradient(135deg, #fffbe5 0%, #fff6b7 100%);
+    color: #bfa100; /* Dark gold */
     font-weight: 600;
 }
 .link-button.google-business:hover {
-    background: linear-gradient(135deg, #ffe066 0%, #ffd700 100%);
-    color: #174ea6;
+    background: linear-gradient(135deg, #fff6b7 0%, #fffbe5 100%);
+    color: #a68a00;
+}
+.link-button.google-business i.fab.fa-google {
+    color: #bfa100; /* Dark gold for Google icon */
+}
+.link-button.google-business span {
+    color: #bfa100; /* Dark gold for caption */
 }
 .link-button.google-business .google-rating {
-    color: #1a73e8; /* Keep rating blue */
+    color: #bfa100; /* Dark gold for rating */
     font-weight: 700;
 }
 .link-button.google-business .google-rating i {
     color: #fbbc04; /* Google yellow for the star */
 }
-/* ...existing code... */
+
 
 
 .footer {
