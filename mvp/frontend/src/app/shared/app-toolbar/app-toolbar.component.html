@@ -1,0 +1,99 @@
+@if (showToolbar) {
+<nav class="app-toolbar bg-white shadow-sm border-b border-gray-200">
+  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+    <!-- Left Section: Back button (conditionally) and branding -->
+    <div class="flex items-center gap-4">
+      @if (isEditPage()) {
+        <button 
+          (click)="goBack()" 
+          class="text-gray-600 hover:text-gray-900 text-xl"
+          title="Back"
+        >
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      }
+      
+      <a routerLink="/dashboard" class="flex items-center gap-2 text-xl font-bold text-purple-600 hover:text-purple-700">
+        <span>OneLinks</span>
+      </a>
+    </div>
+
+    <!-- Center Section: Navigation (optional) -->
+    <div class="hidden md:flex items-center gap-6">
+      @if (!isDashboardPage()) {
+        <a 
+          routerLink="/dashboard" 
+          class="text-gray-600 hover:text-gray-900 font-medium"
+        >
+          Dashboard
+        </a>
+      }
+    </div>
+
+    <!-- Right Section: Profile Menu -->
+    <div class="relative">
+      @if (user$ | async; as user) {
+        <button
+          (click)="toggleProfileMenu()"
+          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white font-semibold">
+            {{ (user.email && user.email.charAt(0).toUpperCase()) || 'U' }}
+          </div>
+          <span class="hidden md:block text-gray-700 font-medium">{{ user.email }}</span>
+          <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+        </button>
+
+        <!-- Profile Dropdown Menu -->
+        @if (showProfileMenu) {
+          <div class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+            <!-- User Info -->
+            <div class="px-4 py-3 border-b border-gray-200">
+              <p class="text-sm font-medium text-gray-900">{{ user.email }}</p>
+              <p class="text-xs text-gray-500 mt-1">Signed in</p>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="py-1">
+              <button
+                (click)="navigateToDashboard()"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3"
+              >
+                <i class="fas fa-th-large w-4"></i>
+                <span>Dashboard</span>
+              </button>
+              
+              <button
+                (click)="navigateToSettings()"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3"
+              >
+                <i class="fas fa-cog w-4"></i>
+                <span>Settings</span>
+              </button>
+            </div>
+
+            <!-- Logout -->
+            <div class="border-t border-gray-200 py-1">
+              <button
+                (click)="logout()"
+                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3"
+              >
+                <i class="fas fa-sign-out-alt w-4"></i>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</nav>
+
+<!-- Backdrop to close menu when clicking outside -->
+@if (showProfileMenu) {
+  <div 
+    class="fixed inset-0 z-40" 
+    (click)="closeProfileMenu()"
+  ></div>
+}
+}

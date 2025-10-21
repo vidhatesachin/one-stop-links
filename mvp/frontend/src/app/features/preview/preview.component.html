@@ -1,0 +1,183 @@
+﻿<!-- The Jolly Box Design - Clean Tailwind Implementation -->
+@if (isPreviewMode && business) {
+  <app-preview-toolbar
+    [businessSlug]="business.slug" 
+    [businessId]="business.id">
+  </app-preview-toolbar>
+}
+
+<div class="page-wrapper" [ngClass]="{'pt-16': isPreviewMode}">
+  @if (loading) {
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600"></div>
+    </div>
+  } @else if (error) {
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="text-center bg-white/90 backdrop-blur-sm p-12 rounded-3xl shadow-2xl max-w-md">
+        <div class="text-7xl mb-6">😕</div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-3">Page Not Found</h1>
+        <p class="text-gray-600 mb-6">This business profile doesn't exist or is not published.</p>
+        <a href="/" class="inline-block px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-semibold hover:shadow-xl transition-all">
+          Go Home
+        </a>
+      </div>
+    </div>
+  } @else if (business) {
+    <!-- Main Container Card -->
+    <div class="max-w-md mx-auto bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 animate-fadeInUp">
+      
+      <!-- Logo/Profile Section -->
+      <div class="text-center mb-8">
+        @if (business.logo) {
+          <div class="mb-5">
+            <img 
+              [src]="business.logo" 
+              alt="{{ business.name }}" 
+              class="w-28 h-28 mx-auto rounded-full object-cover border-4 border-white shadow-lg hover:scale-105 transition-transform duration-300"
+            >
+          </div>
+        } @else {
+          <div class="mb-5">
+            <div 
+              class="w-28 h-28 mx-auto rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform duration-300"
+              [style.background]="'linear-gradient(135deg, ' + business.primaryColor + ', ' + adjustColor(business.primaryColor, 30) + ')'"
+            >
+              <span class="text-5xl font-bold text-white">
+                {{ business.name.charAt(0).toUpperCase() }}
+              </span>
+            </div>
+          </div>
+        }
+        
+        <!-- Business Name -->
+        <h1 class="business-title">
+          {{ business.name }}
+        </h1>
+
+        <!-- Quick Contact Icons Row -->
+        @if (getQuickContacts().length > 0) {
+          <div class="flex justify-center items-center gap-4 mt-6">
+            @for (contact of getQuickContacts(); track contact.id) {
+              <a 
+                [href]="getContactUrl(contact)" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                (click)="trackContactClick(contact.id)"
+                class="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                [ngClass]="getContactButtonClass(contact.platform)"
+                [title]="contact.platform"
+              >
+                <ng-container [ngSwitch]="contact.platform.toLowerCase()">
+                  <i *ngSwitchCase="'whatsapp'" class="fab fa-whatsapp text-lg"></i>
+                  <i *ngSwitchCase="'email'" class="fas fa-envelope text-lg"></i>
+                  <i *ngSwitchCase="'phone'" class="fas fa-phone text-lg"></i>
+                  <i *ngSwitchCase="'location'" class="fas fa-location-dot text-lg"></i>
+                  <i *ngSwitchDefault class="fas fa-link text-lg"></i>
+                </ng-container>
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Social Links Grid - 2 Columns -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <!-- Social Media Links -->
+        @for (link of business.links; track link.id) {
+          <a 
+            [href]="link.url" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            (click)="trackLinkClick(link.id)"
+            class="flex flex-col items-center justify-center p-5 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 min-h-[110px] group"
+            [ngClass]="getLinkButtonClass(link.title)"
+          >
+            <div class="text-4xl mb-2 flex items-center justify-center">
+              <ng-container [ngSwitch]="true">
+                <i *ngSwitchCase="link.title.toLowerCase().includes('instagram') || link.title.toLowerCase().includes('insta')" class="fab fa-instagram"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('facebook') || link.title.toLowerCase().includes('fb')" class="fab fa-facebook"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('youtube') || link.title.toLowerCase().includes('yt')" class="fab fa-youtube"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('twitter') || link.title.toLowerCase().includes('x.com')" class="fab fa-twitter"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('linkedin')" class="fab fa-linkedin"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('tiktok')" class="fab fa-tiktok"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('pinterest')" class="fab fa-pinterest"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('snapchat') || link.title.toLowerCase().includes('snap')" class="fab fa-snapchat"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('whatsapp') || link.title.toLowerCase().includes('wa')" class="fab fa-whatsapp"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('telegram')" class="fab fa-telegram"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('discord')" class="fab fa-discord"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('github')" class="fab fa-github"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('dribbble')" class="fab fa-dribbble"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('behance')" class="fab fa-behance"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('medium')" class="fab fa-medium"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('spotify')" class="fab fa-spotify"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('reddit')" class="fab fa-reddit"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('twitch')" class="fab fa-twitch"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('google')" class="fab fa-google"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('website') || link.title.toLowerCase().includes('web') || link.title.toLowerCase().includes('site') || link.title.toLowerCase().includes('portfolio')" class="fas fa-globe"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('email') || link.title.toLowerCase().includes('mail')" class="fas fa-envelope"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('phone') || link.title.toLowerCase().includes('call') || link.title.toLowerCase().includes('mobile')" class="fas fa-phone"></i>
+                <i *ngSwitchCase="link.title.toLowerCase().includes('location') || link.title.toLowerCase().includes('map') || link.title.toLowerCase().includes('address')" class="fas fa-location-dot"></i>
+                <i *ngSwitchDefault class="fas fa-link"></i>
+              </ng-container>
+            </div>
+            <span class="text-sm font-medium text-center leading-tight">
+              {{ link.title }}
+            </span>
+          </a>
+        }
+
+        <!-- Additional Contacts as Cards -->
+        @for (contact of getAdditionalContacts(); track contact.id) {
+          <a 
+            [href]="getContactUrl(contact)" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            (click)="trackContactClick(contact.id)"
+            class="flex flex-col items-center justify-center p-5 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 min-h-[110px] group"
+            [ngClass]="getLinkButtonClass(contact.platform)"
+          >
+            <div class="text-4xl mb-2 flex items-center justify-center">
+              <ng-container [ngSwitch]="true">
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('instagram') || contact.platform.toLowerCase().includes('insta')" class="fab fa-instagram"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('facebook') || contact.platform.toLowerCase().includes('fb')" class="fab fa-facebook"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('youtube') || contact.platform.toLowerCase().includes('yt')" class="fab fa-youtube"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('twitter') || contact.platform.toLowerCase().includes('x.com')" class="fab fa-twitter"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('linkedin')" class="fab fa-linkedin"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('tiktok')" class="fab fa-tiktok"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('pinterest')" class="fab fa-pinterest"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('snapchat') || contact.platform.toLowerCase().includes('snap')" class="fab fa-snapchat"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('whatsapp') || contact.platform.toLowerCase().includes('wa')" class="fab fa-whatsapp"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('telegram')" class="fab fa-telegram"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('discord')" class="fab fa-discord"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('github')" class="fab fa-github"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('dribbble')" class="fab fa-dribbble"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('behance')" class="fab fa-behance"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('medium')" class="fab fa-medium"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('spotify')" class="fab fa-spotify"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('reddit')" class="fab fa-reddit"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('twitch')" class="fab fa-twitch"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('google')" class="fab fa-google"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('website') || contact.platform.toLowerCase().includes('web') || contact.platform.toLowerCase().includes('site') || contact.platform.toLowerCase().includes('portfolio')" class="fas fa-globe"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('email') || contact.platform.toLowerCase().includes('mail')" class="fas fa-envelope"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('phone') || contact.platform.toLowerCase().includes('call') || contact.platform.toLowerCase().includes('mobile')" class="fas fa-phone"></i>
+                <i *ngSwitchCase="contact.platform.toLowerCase().includes('location') || contact.platform.toLowerCase().includes('map') || contact.platform.toLowerCase().includes('address')" class="fas fa-location-dot"></i>
+                <i *ngSwitchDefault class="fas fa-link"></i>
+              </ng-container>
+            </div>
+            <span class="text-sm font-medium text-center leading-tight capitalize">
+              {{ contact.platform }}
+            </span>
+          </a>
+        }
+      </div>
+
+      <!-- Footer -->
+      <footer class="text-center pt-6 border-t border-gray-200 text-gray-600 text-sm">
+        <p class="mb-1">&copy; {{ currentYear }} {{ business.name }}. All rights reserved.</p>
+        <p class="text-xs text-gray-500">
+          Powered by <span class="font-bold text-purple-600">OneLinks</span>
+        </p>
+      </footer>
+    </div>
+  }
+</div>

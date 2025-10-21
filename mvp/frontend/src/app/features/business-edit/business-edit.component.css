@@ -1,0 +1,24 @@
+/* Business Edit Component Styles */
+
+:host {
+  display: block;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Theme selector active state */
+button[class*="ring-2"] {
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Link and contact cards */
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}

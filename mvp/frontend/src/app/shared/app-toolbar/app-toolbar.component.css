@@ -1,0 +1,10 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Profile menu dropdown should be above backdrop */
+.relative {
+  z-index: 50;
+}

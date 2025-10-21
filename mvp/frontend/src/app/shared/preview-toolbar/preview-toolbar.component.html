@@ -1,0 +1,81 @@
+<div class="preview-toolbar py-3 px-4 flex items-center justify-between">
+  <div class="flex items-center gap-4">
+    <button 
+      (click)="closePreview()" 
+      class="text-gray-600 hover:text-gray-900 text-xl"
+      title="Go back"
+    >
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div class="text-lg font-semibold text-gray-800">Preview Mode</div>
+  </div>
+  
+  <div class="flex items-center gap-3">
+    <button
+      (click)="copyUrlToClipboard()"
+      class="toolbar-button flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50"
+    >
+      <i class="fas fa-copy mr-2"></i> 
+      {{ copied ? 'Copied!' : 'Copy URL' }}
+    </button>
+    
+    <button
+      (click)="toggleQrModal()"
+      class="toolbar-button flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50"
+    >
+      <i class="fas fa-qrcode mr-2"></i> QR Code
+    </button>
+    
+    <button
+      (click)="editBusiness()"
+      class="toolbar-button flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+    >
+      <i class="fas fa-pencil-alt mr-2"></i> Edit
+    </button>
+  </div>
+</div>
+
+<!-- QR Code Modal -->
+@if (showQrModal) {
+<div class="modal-backdrop fade-in" (click)="closeQrModal($event)">
+  <div class="qr-modal p-6" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold text-gray-900">QR Code</h3>
+      <button 
+        type="button"
+        (click)="closeQrModal($event)" 
+        class="text-gray-500 hover:text-gray-900"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="flex flex-col items-center">
+      <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+        <img [src]="qrCodeDataUrl" alt="QR Code" class="w-64 h-64">
+      </div>
+      
+      <p class="text-gray-600 mb-6 text-center text-sm">
+        Scan this QR code or share it with others to quickly access your OneLinks profile
+      </p>
+      
+      <div class="flex gap-3 w-full">
+        <button
+          (click)="downloadQRCode(); $event.stopPropagation();"
+          class="flex-1 flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          <i class="fas fa-download mr-2"></i> Download
+        </button>
+        
+        <button
+          type="button"
+          (click)="closeQrModal($event)"
+          class="flex-1 flex items-center justify-center bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

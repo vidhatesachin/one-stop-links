@@ -1,0 +1,202 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlanTier {
+  FREE
+  PRO
+  AGENCY
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  password      String?   // For email/password auth
+  
+  // Plan & Subscription
+  planTier      PlanTier  @default(FREE)
+  razorpayCustomerId String?
+  subscriptionId     String?
+  subscriptionEnd    DateTime?
+  
+  // OAuth
+  googleId      String?   @unique
+  
+  // Metadata
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  businesses    Business[]
+  accounts      Account[]
+  sessions      Session[]
+  
+  @@index([email])
+  @@index([googleId])
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Business {
+  id          String   @id @default(uuid())
+  userId      String
+  
+  // Business Info
+  name        String
+  slug        String   @unique
+  logo        String?
+  bio         String?
+  
+  // Customization
+  theme       String   @default("modern")
+  primaryColor String  @default("#3B82F6")
+  bgColor     String   @default("#FFFFFF")
+  textColor   String   @default("#1F2937")
+  
+  // Custom Domain
+  customDomain String?
+  
+  // SEO
+  metaTitle   String?
+  metaDescription String?
+  
+  // Status
+  isActive    Boolean  @default(true)
+  published   Boolean  @default(false)
+  
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links       Link[]
+  contacts    Contact[]
+  analytics   Analytics[]
+  
+  @@index([userId])
+  @@index([slug])
+}
+
+model Link {
+  id          String   @id @default(uuid())
+  businessId  String
+  
+  // Link Data
+  title       String
+  url         String
+  icon        String?  // Icon name or URL
+  platform    String?  // instagram, twitter, etc.
+  
+  // Display
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  clicks      Click[]
+  
+  @@index([businessId])
+}
+
+model Contact {
+  id          String      @id @default(uuid())
+  businessId  String
+  
+  // Contact Data
+  platform    String      // email, phone, whatsapp, twitter, instagram, etc.
+  value       String
+  label       String?
+  
+  // Display
+  order       Int         @default(0)
+  isActive    Boolean     @default(true)
+  
+  // Metadata
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  business    Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  
+  @@index([businessId])
+}
+
+model Analytics {
+  id          String   @id @default(uuid())
+  businessId  String
+  
+  // Metrics
+  date        DateTime @default(now())
+  views       Int      @default(0)
+  uniqueViews Int      @default(0)
+  clicks      Int      @default(0)
+  
+  // Relations
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  
+  @@unique([businessId, date])
+  @@index([businessId])
+}
+
+model Click {
+  id          String   @id @default(uuid())
+  linkId      String
+  
+  // Click Data
+  timestamp   DateTime @default(now())
+  country     String?
+  city        String?
+  device      String?
+  browser     String?
+  referrer    String?
+  
+  // Relations
+  link        Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  
+  @@index([linkId])
+  @@index([timestamp])
+}

@@ -1,0 +1,304 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Edit Actions Bar -->
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-900">Edit Business</h1>
+      <div class="flex items-center gap-3">
+        <button
+          (click)="previewBusiness()"
+          class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+        >
+          Preview
+        </button>
+        <button
+          (click)="saveBusiness()"
+          [disabled]="saving"
+          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          {{ saving ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="container mx-auto px-4 py-8 text-center">
+      <div class="text-gray-600">Loading...</div>
+    </div>
+  }
+
+  <!-- Edit Form -->
+  @if (!loading && business) {
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- Basic Information -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Business Name *
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="My Business"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              URL Slug *
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500">onelinks.bio/</span>
+              <input
+                type="text"
+                [(ngModel)]="slug"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="mybusiness"
+                pattern="[a-z0-9-]+"
+              />
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Only lowercase letters, numbers, and hyphens</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Bio / Description
+            </label>
+            <textarea
+              [(ngModel)]="bio"
+              rows="3"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Tell people about your business..."
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Business Logo *
+            </label>
+            
+            <!-- Current Logo Display -->
+            @if (logo && !showLogoUploader) {
+              <div class="mb-4">
+                <div class="relative inline-block">
+                  <img 
+                    [src]="logo" 
+                    alt="Current logo" 
+                    class="w-32 h-32 object-cover rounded-lg border-2 border-gray-300 shadow-sm"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeLogo()"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                    title="Remove logo"
+                  >
+                    ×
+                  </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">
+                  Logo optimized for best performance
+                </p>
+              </div>
+            }
+            
+            <!-- Upload Button or Uploader Component -->
+            @if (!showLogoUploader) {
+              <button
+                type="button"
+                (click)="openLogoUploader()"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+              >
+                {{ logo ? 'Change Logo' : 'Upload Logo' }}
+              </button>
+            } @else {
+              <app-logo-uploader
+                (logoUploaded)="onLogoUploaded($event)"
+                (uploadCancelled)="onUploadCancelled()"
+              ></app-logo-uploader>
+            }
+            
+            <p class="text-xs text-gray-500 mt-2">
+              • Image will be automatically cropped and optimized<br>
+              • Recommended: Square image for best results<br>
+              • Max file size: 1MB (compress large images first)
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="published"
+              [(ngModel)]="published"
+              class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+            />
+            <label for="published" class="text-sm font-medium text-gray-700">
+              Published (visible to public)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theme Selection -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Theme & Branding</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Select Theme
+            </label>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+              @for (themeOption of themes; track themeOption.value) {
+                <button
+                  type="button"
+                  (click)="theme = themeOption.value"
+                  [class.ring-2]="theme === themeOption.value"
+                  [class.ring-blue-500]="theme === themeOption.value"
+                  class="p-4 border border-gray-300 rounded-lg hover:border-blue-500 transition-all text-left"
+                >
+                  <div class="font-semibold text-gray-900">{{ themeOption.label }}</div>
+                  <div class="text-xs text-gray-500 mt-1">{{ themeOption.preview }}</div>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Primary Color
+            </label>
+            <div class="flex items-center gap-3">
+              <input
+                type="color"
+                [(ngModel)]="primaryColor"
+                class="h-10 w-20 rounded border border-gray-300"
+              />
+              <input
+                type="text"
+                [(ngModel)]="primaryColor"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="#3B82F6"
+                pattern="^#[0-9A-Fa-f]{6}$"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links Management -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-900">Links</h2>
+          <button
+            (click)="addLink()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+          >
+            + Add Link
+          </button>
+        </div>
+
+        @if (links.length === 0) {
+          <p class="text-gray-500 text-center py-4">No links yet. Add your first link!</p>
+        }
+
+        <div class="space-y-3">
+          @for (link of links; track link.id; let i = $index) {
+            <div class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg">
+              <div class="flex-1 space-y-2">
+                <input
+                  type="text"
+                  [(ngModel)]="link.title"
+                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="Link Title"
+                />
+                <input
+                  type="url"
+                  [(ngModel)]="link.url"
+                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="https://example.com"
+                />
+              </div>
+              <button
+                (click)="removeLink(i)"
+                class="text-red-600 hover:text-red-700 mt-2"
+                title="Delete link"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Contacts Management -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-900">Contact Info</h2>
+          <button
+            (click)="addContact()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+          >
+            + Add Contact
+          </button>
+        </div>
+
+        @if (contacts.length === 0) {
+          <p class="text-gray-500 text-center py-4">No contacts yet. Add your social media!</p>
+        }
+
+        <div class="space-y-3">
+          @for (contact of contacts; track contact.id; let i = $index) {
+            <div class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg">
+              <div class="flex-1 space-y-2">
+                <select
+                  [(ngModel)]="contact.platform"
+                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="email">Email</option>
+                  <option value="phone">Phone</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="twitter">Twitter</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="github">GitHub</option>
+                  <option value="youtube">YouTube</option>
+                </select>
+                <input
+                  type="text"
+                  [(ngModel)]="contact.value"
+                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="username or URL"
+                />
+              </div>
+              <button
+                (click)="removeContact(i)"
+                class="text-red-600 hover:text-red-700 mt-2"
+                title="Delete contact"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6 border-2 border-red-200">
+        <h2 class="text-xl font-bold text-red-600 mb-4">Danger Zone</h2>
+        <p class="text-gray-600 mb-4">Once you delete a business, there is no going back.</p>
+        <button
+          (click)="deleteBusiness()"
+          class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+        >
+          Delete Business
+        </button>
+      </div>
+    </div>
+  }
+</div>

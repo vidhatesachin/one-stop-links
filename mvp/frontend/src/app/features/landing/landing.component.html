@@ -1,0 +1,99 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <!-- Hero Section -->
+  <div class="container mx-auto px-4 py-20">
+    <div class="text-center max-w-4xl mx-auto">
+      <h1 class="text-6xl font-bold text-gray-900 mb-6">
+        One Link for <span class="text-blue-600">Everything</span>
+      </h1>
+      <p class="text-xl text-gray-600 mb-8">
+        Share all your important links in one beautiful landing page. Perfect for creators, businesses, and influencers.
+      </p>
+      <div class="flex gap-4 justify-center">
+        <a
+          routerLink="/login"
+          class="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        >
+          Get Started - It's Free
+        </a>
+        <a
+          href="#features"
+          class="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+        >
+          Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div id="features" class="container mx-auto px-4 py-20">
+    <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">
+      Everything you need
+    </h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      @for (feature of features; track feature.title) {
+        <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+          <div class="text-4xl mb-4">{{ feature.icon }}</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ feature.title }}</h3>
+          <p class="text-gray-600">{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Pricing Section -->
+  <div class="container mx-auto px-4 py-20">
+    <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">
+      Simple, Transparent Pricing
+    </h2>
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      @for (plan of plans; track plan.name) {
+        <div
+          class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+          [class.ring-2]="plan.popular"
+          [class.ring-blue-600]="plan.popular"
+        >
+          @if (plan.popular) {
+            <div class="text-center mb-4">
+              <span class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                Most Popular
+              </span>
+            </div>
+          }
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+          <div class="mb-6">
+            <span class="text-4xl font-bold">{{ plan.price }}</span>
+            <span class="text-gray-600">{{ plan.period }}</span>
+          </div>
+          <ul class="space-y-3 mb-8">
+            @for (feature of plan.features; track feature) {
+              <li class="flex items-start">
+                <span class="text-green-500 mr-2">✓</span>
+                <span class="text-gray-600">{{ feature }}</span>
+              </li>
+            }
+          </ul>
+          <a
+            routerLink="/login"
+            class="block text-center px-6 py-3 rounded-lg font-semibold transition-colors"
+            [class.bg-blue-600]="plan.popular"
+            [class.text-white]="plan.popular"
+            [class.hover:bg-blue-700]="plan.popular"
+            [class.bg-gray-100]="!plan.popular"
+            [class.text-gray-900]="!plan.popular"
+            [class.hover:bg-gray-200]="!plan.popular"
+          >
+            Get Started
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-gray-400">© 2025 OneLinks. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
