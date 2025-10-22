@@ -1,36 +1,361 @@
-/* Drag handle only visible on hover */
-.drag-handle {
-  opacity: 0;
-  transition: opacity 0.2s;
-  width: 18px;
-  min-width: 18px;
-  justify-content: center;
-  cursor: grab;
-}
-.cdk-drag:hover .drag-handle {
-  opacity: 1;
-}
-/* Business Edit Component Styles */
+/* ============================================
+   One Stop Links - Business Edit Component Styles
+   Brand Colors: Indigo/Blue Theme
+   ============================================ */
 
 :host {
   display: block;
 }
 
-.container {
-  max-width: 1200px;
+/* ============================================
+   CSS Custom Properties (Theme Colors)
+   ============================================ */
+:host {
+  --brand-primary: #4f46e5;        /* Indigo 600 */
+  --brand-primary-dark: #4338ca;   /* Indigo 700 */
+  --brand-primary-darker: #3730a3; /* Indigo 800 */
+  --brand-primary-light: #6366f1;  /* Indigo 500 */
+  --brand-primary-lighter: #818cf8; /* Indigo 400 */
+  --brand-primary-bg: #eef2ff;     /* Indigo 50 */
+  --brand-primary-bg-light: #e0e7ff; /* Indigo 100 */
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 80px;
+/* ============================================
+   Brand Gradient Text
+   ============================================ */
+.brand-gradient-text {
+  background: linear-gradient(to right, var(--brand-primary), var(--brand-primary-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Theme selector active state */
-button[class*="ring-2"] {
-  background-color: rgba(59, 130, 246, 0.05);
+/* ============================================
+   Brand Buttons
+   ============================================ */
+.btn-brand-primary {
+  background: linear-gradient(to right, var(--brand-primary), var(--brand-primary-dark));
+  color: white;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-lg);
 }
 
-/* Link and contact cards */
-.space-y-3 > * + * {
-  margin-top: 0.75rem;
+.btn-brand-primary:hover:not(:disabled) {
+  background: linear-gradient(to right, var(--brand-primary-dark), var(--brand-primary-darker));
+  box-shadow: var(--shadow-xl);
+}
+
+.btn-brand-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-brand-secondary {
+  background: white;
+  border: 2px solid #d1d5db;
+  color: #374151;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-brand-secondary:hover {
+  background: #f9fafb;
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   Brand Icon Backgrounds
+   ============================================ */
+.brand-icon-bg {
+  background: linear-gradient(to bottom right, var(--brand-primary), var(--brand-primary-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.brand-icon-bg i {
+  color: white;
+  font-size: 1.125rem;
+}
+
+/* ============================================
+   Form Elements - Brand Focus States
+   ============================================ */
+.input-brand,
+.textarea-brand,
+.select-brand {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-xl);
+  transition: all 0.2s;
+}
+
+.input-brand:hover,
+.textarea-brand:hover,
+.select-brand:hover {
+  border-color: #d1d5db;
+}
+
+.input-brand:focus,
+.textarea-brand:focus,
+.select-brand:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+.card-brand {
+  background: white;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid #f3f4f6;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.3s;
+}
+
+.card-brand:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+/* ============================================
+   Theme Selection Buttons
+   ============================================ */
+.theme-option {
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-xl);
+  transition: all 0.2s;
+  text-align: left;
+  background: white;
+}
+
+.theme-option:hover {
+  border-color: var(--brand-primary-lighter);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-option.active {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2), var(--shadow-lg);
+}
+
+.theme-option-title {
+  font-weight: 700;
+  color: #111827;
+  transition: color 0.2s;
+}
+
+.theme-option:hover .theme-option-title {
+  color: var(--brand-primary);
+}
+
+.theme-option.active .theme-option-title {
+  color: var(--brand-primary);
+}
+
+/* ============================================
+   Required Field Indicator
+   ============================================ */
+.required-indicator {
+  color: var(--brand-primary);
+}
+
+/* ============================================
+   Info/Helper Text
+   ============================================ */
+.info-icon {
+  color: var(--brand-primary-lighter);
+}
+
+.info-box {
+  background: var(--brand-primary-bg);
+  border: 1px solid var(--brand-primary-bg-light);
+  border-radius: var(--radius-xl);
+  padding: 1rem;
+}
+
+.info-box i {
+  color: var(--brand-primary);
+}
+
+/* ============================================
+   Published Toggle
+   ============================================ */
+.published-toggle-wrapper {
+  background: linear-gradient(to right, var(--brand-primary-bg), rgba(238, 242, 255, 0.5));
+  border: 2px solid var(--brand-primary-bg-light);
+  border-radius: var(--radius-xl);
+  padding: 1rem;
+  transition: border-color 0.2s;
+}
+
+.published-toggle-wrapper:hover {
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+.published-toggle {
+  accent-color: var(--brand-primary);
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+/* ============================================
+   Drag & Drop Items
+   ============================================ */
+.drag-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1.25rem;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(to bottom right, white, rgba(249, 250, 251, 0.5));
+  transition: all 0.2s;
+}
+
+.drag-item:hover {
+  border-color: rgba(79, 70, 229, 0.3);
+  box-shadow: var(--shadow-md);
+}
+
+.drag-handle {
+  opacity: 0;
+  transition: opacity 0.2s;
+  width: 2rem;
+  min-width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: #9ca3af;
+}
+
+.drag-item:hover .drag-handle {
+  opacity: 1;
+  color: var(--brand-primary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ============================================
+   Empty States
+   ============================================ */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(to bottom right, #f9fafb, rgba(238, 242, 255, 0.3));
+  border-radius: var(--radius-2xl);
+  border: 2px dashed #d1d5db;
+}
+
+.empty-state-icon {
+  width: 4rem;
+  height: 4rem;
+  background: var(--brand-primary-bg-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.empty-state-icon i {
+  color: var(--brand-primary);
+  font-size: 1.5rem;
+}
+
+/* ============================================
+   Logo Uploader Container
+   ============================================ */
+.logo-uploader-container {
+  background: linear-gradient(to bottom right, #f9fafb, rgba(238, 242, 255, 0.3));
+  padding: 1.5rem;
+  border-radius: var(--radius-2xl);
+  border: 2px dashed rgba(79, 70, 229, 0.3);
+}
+
+/* ============================================
+   Color Picker Badge
+   ============================================ */
+.color-picker-badge {
+  position: absolute;
+  bottom: -0.25rem;
+  right: -0.25rem;
+  background: var(--brand-primary);
+  color: white;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* ============================================
+   Loading Spinner
+   ============================================ */
+.loading-spinner {
+  border: 3px solid var(--brand-primary);
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   Responsive - Mobile Specific
+   ============================================ */
+@media (max-width: 640px) {
+  .card-brand {
+    padding: 1.5rem;
+  }
+  
+  .drag-item {
+    padding: 1rem;
+  }
+}
+
+/* ============================================
+   Delete Button (Danger)
+   ============================================ */
+.btn-delete {
+  color: #9ca3af;
+  transition: all 0.2s;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete:hover {
+  color: #dc2626;
+  background: #fef2f2;
 }

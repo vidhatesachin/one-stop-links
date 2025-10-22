@@ -1,21 +1,26 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Edit Actions Bar -->
-  <div class="bg-white shadow-sm border-b border-gray-200">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-gray-900">Edit Business</h1>
-      <div class="flex items-center gap-3">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-gray-50">
+  <!-- Modern Sticky Header -->
+  <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 max-w-5xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold brand-gradient-text">
+          Edit Business
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">Customize your business profile</p>
+      </div>
+      <div class="flex items-center gap-3 w-full sm:w-auto">
         <button
           (click)="previewBusiness()"
-          class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+          class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl btn-brand-secondary"
         >
-          Preview
+          <i class="fas fa-eye mr-2"></i>Preview
         </button>
         <button
           (click)="saveBusiness()"
           [disabled]="saving"
-          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl btn-brand-primary"
         >
-          {{ saving ? 'Saving...' : 'Save Changes' }}
+          <i class="fas fa-save mr-2"></i>{{ saving ? 'Saving...' : 'Save Changes' }}
         </button>
       </div>
     </div>
@@ -23,166 +28,204 @@
 
   <!-- Loading State -->
   @if (loading) {
-    <div class="container mx-auto px-4 py-8 text-center">
-      <div class="text-gray-600">Loading...</div>
+    <div class="container mx-auto px-4 py-16 text-center">
+      <div class="inline-flex items-center gap-3 px-6 py-4 bg-white rounded-2xl shadow-lg">
+        <div class="animate-spin rounded-full h-6 w-6 loading-spinner"></div>
+        <span class="text-gray-700 font-medium">Loading your business...</span>
+      </div>
     </div>
   }
 
   <!-- Edit Form -->
   @if (!loading && business) {
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-  <!-- Basic Information -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-5xl">
+      
+      <!-- Basic Information Card -->
+      <div class="card-brand">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="brand-icon-bg">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900">Basic Information</h2>
+        </div>
         
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Business Name *
+        <div class="space-y-6">
+          <!-- Business Name -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Business Name <span class="required-indicator">*</span>
             </label>
             <input
               type="text"
               [(ngModel)]="name"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="My Business"
+              class="input-brand"
+              placeholder="Enter your business name"
             />
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              URL Slug *
+          <!-- URL Slug -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              URL Slug <span class="required-indicator">*</span>
             </label>
-            <div class="flex items-center gap-2">
-              <span class="text-gray-500">onestoplink.bio/</span>
+            <div class="flex items-center gap-2 p-1 border-2 border-gray-200 rounded-xl focus-within:border-indigo-600 focus-within:shadow-sm transition-all duration-200 hover:border-gray-300">
+              <span class="pl-3 text-gray-500 font-medium text-sm">onestoplink.bio/</span>
               <input
                 type="text"
                 [(ngModel)]="slug"
-                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="mybusiness"
+                class="flex-1 px-2 py-2 border-0 focus:ring-0 focus:outline-none"
+                placeholder="your-business"
                 pattern="[a-z0-9-]+"
               />
             </div>
-            <p class="text-xs text-gray-500 mt-1">Only lowercase letters, numbers, and hyphens</p>
+            <p class="text-xs text-gray-500 mt-2 flex items-center gap-1">
+              <i class="fas fa-info-circle info-icon"></i>
+              Only lowercase letters, numbers, and hyphens
+            </p>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+          <!-- Bio -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
               Bio / Description
             </label>
             <textarea
               [(ngModel)]="bio"
-              rows="3"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows="4"
+              class="textarea-brand resize-none"
               placeholder="Tell people about your business..."
             ></textarea>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Business Logo *
+          <!-- Logo Upload -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">
+              Business Logo <span class="required-indicator">*</span>
             </label>
             
-            <!-- Current Logo Display -->
             @if (logo && !showLogoUploader) {
               <div class="mb-4">
-                <div class="relative inline-block">
+                <div class="relative inline-block group/logo">
                   <img 
                     [src]="logo" 
                     alt="Current logo" 
-                    class="w-32 h-32 object-cover rounded-lg border-2 border-gray-300 shadow-sm"
+                    class="w-32 h-32 object-cover rounded-2xl border-4 border-gray-200 shadow-md hover:shadow-lg transition-all duration-200"
                   />
                   <button
                     type="button"
                     (click)="removeLogo()"
-                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 transition-all duration-200 shadow-lg hover:scale-110"
                     title="Remove logo"
                   >
-                    ×
+                    <i class="fas fa-times text-xs"></i>
                   </button>
                 </div>
-                <p class="text-xs text-gray-500 mt-2">
+                <p class="text-xs text-gray-500 mt-3 flex items-center gap-1">
+                  <i class="fas fa-check-circle text-green-500"></i>
                   Logo optimized for best performance
                 </p>
               </div>
             }
             
-            <!-- Upload Button or Uploader Component -->
             @if (!showLogoUploader) {
               <button
                 type="button"
                 (click)="openLogoUploader()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+                class="px-4 py-2 rounded-lg text-sm btn-brand-primary"
               >
-                {{ logo ? 'Change Logo' : 'Upload Logo' }}
+                <i class="fas fa-upload mr-2"></i>{{ logo ? 'Change Logo' : 'Upload Logo' }}
               </button>
             } @else {
-              <app-logo-uploader
-                (logoUploaded)="onLogoUploaded($event)"
-                (uploadCancelled)="onUploadCancelled()"
-              ></app-logo-uploader>
+              <div class="logo-uploader-container">
+                <app-logo-uploader
+                  (logoUploaded)="onLogoUploaded($event)"
+                  (uploadCancelled)="onUploadCancelled()"
+                ></app-logo-uploader>
+              </div>
             }
             
-            <p class="text-xs text-gray-500 mt-2">
-              • Image will be automatically cropped and optimized<br>
-              • Recommended: Square image for best results<br>
-              • Max file size: 1MB (compress large images first)
-            </p>
+            <div class="info-box mt-3">
+              <p class="text-xs text-gray-600 space-y-1">
+                <span class="flex items-start gap-2"><i class="fas fa-check mt-0.5"></i><span>Image will be automatically cropped and optimized</span></span>
+                <span class="flex items-start gap-2"><i class="fas fa-check mt-0.5"></i><span>Recommended: Square image for best results</span></span>
+                <span class="flex items-start gap-2"><i class="fas fa-check mt-0.5"></i><span>Max file size: 1MB (compress large images first)</span></span>
+              </p>
+            </div>
           </div>
 
-          <div class="flex items-center gap-2">
+          <!-- Published Toggle -->
+          <div class="published-toggle-wrapper flex items-center gap-3">
             <input
               type="checkbox"
               id="published"
               [(ngModel)]="published"
-              class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              class="published-toggle"
             />
-            <label for="published" class="text-sm font-medium text-gray-700">
-              Published (visible to public)
+            <label for="published" class="text-sm font-semibold text-gray-700 cursor-pointer flex-1">
+              <span class="block">Published (visible to public)</span>
+              <span class="text-xs font-normal text-gray-500">Make your business profile accessible to everyone</span>
             </label>
           </div>
         </div>
       </div>
 
-      <!-- Theme Selection -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">Theme & Branding</h2>
+      <!-- Theme & Branding Card -->
+      <div class="card-brand">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="brand-icon-bg">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900">Theme & Branding</h2>
+        </div>
         
-        <div class="space-y-4">
+        <div class="space-y-6">
+          <!-- Theme Selection -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">
               Select Theme
             </label>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               @for (themeOption of themes; track themeOption.value) {
                 <button
                   type="button"
                   (click)="theme = themeOption.value"
-                  [class.ring-2]="theme === themeOption.value"
-                  [class.ring-blue-500]="theme === themeOption.value"
-                  class="p-4 border border-gray-300 rounded-lg hover:border-blue-500 transition-all text-left"
+                  [class.active]="theme === themeOption.value"
+                  class="theme-option"
                 >
-                  <div class="font-semibold text-gray-900">{{ themeOption.label }}</div>
-                  <div class="text-xs text-gray-500 mt-1">{{ themeOption.preview }}</div>
+                  <div class="theme-option-title">{{ themeOption.label }}</div>
+                  <div class="text-xs text-gray-500 mt-1.5 leading-relaxed">{{ themeOption.preview }}</div>
+                  @if (theme === themeOption.value) {
+                    <div class="mt-2 flex items-center gap-1 text-indigo-600">
+                      <i class="fas fa-check-circle text-xs"></i>
+                      <span class="text-xs font-semibold">Selected</span>
+                    </div>
+                  }
                 </button>
               }
             </div>
           </div>
 
+          <!-- Primary Color -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">
               Primary Color
             </label>
-            <div class="flex items-center gap-3">
-              <input
-                type="color"
-                [(ngModel)]="primaryColor"
-                class="h-10 w-20 rounded border border-gray-300"
-              />
+            <div class="flex items-center gap-4">
+              <div class="relative">
+                <input
+                  type="color"
+                  [(ngModel)]="primaryColor"
+                  class="h-14 w-14 rounded-xl border-2 border-gray-200 cursor-pointer hover:border-indigo-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                />
+                <div class="color-picker-badge">
+                  <i class="fas fa-eyedropper"></i>
+                </div>
+              </div>
               <input
                 type="text"
                 [(ngModel)]="primaryColor"
-                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="#3B82F6"
+                class="input-brand flex-1 font-mono"
+                placeholder="#e05d1b"
                 pattern="^#[0-9A-Fa-f]{6}$"
               />
             </div>
@@ -190,49 +233,60 @@
         </div>
       </div>
 
-      <!-- Links Management -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-gray-900">Links</h2>
+      <!-- Links Management Card -->
+      <div class="card-brand">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="brand-icon-bg">
+              <i class="fas fa-link"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">Links</h2>
+          </div>
           <button
             (click)="addLink()"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+            class="px-5 py-2.5 rounded-xl text-sm btn-brand-primary"
           >
-            + Add Link
+            <i class="fas fa-plus mr-2"></i>Add Link
           </button>
         </div>
 
         @if (links.length === 0) {
-          <p class="text-gray-500 text-center py-4">No links yet. Add your first link!</p>
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <i class="fas fa-link"></i>
+            </div>
+            <p class="text-gray-600 font-medium mb-2">No links yet</p>
+            <p class="text-gray-500 text-sm">Add your first social media or website link!</p>
+          </div>
         }
 
         <div class="space-y-3">
           <div cdkDropList (cdkDropListDropped)="dropLink($event)">
             @for (link of links; track link.id; let i = $index) {
-              <div cdkDrag class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg bg-white">
-                <div class="flex items-center mr-1 drag-handle" cdkDragHandle title="Drag to reorder">
-                  <i class="fas fa-grip-vertical text-gray-400 text-base"></i>
+              <div cdkDrag class="drag-item">
+                <div class="drag-handle" cdkDragHandle title="Drag to reorder">
+                  <i class="fas fa-grip-vertical text-lg"></i>
                 </div>
-                <div class="flex-1 space-y-2">
+                <div class="flex-1 space-y-3">
                   <input
                     type="text"
                     [(ngModel)]="link.title"
-                    class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                    placeholder="Link Title"
+                    class="input-brand"
+                    placeholder="Link Title (e.g., Instagram, Website)"
                   />
                   <input
                     type="url"
                     [(ngModel)]="link.url"
-                    class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    class="input-brand"
                     placeholder="https://example.com"
                   />
                 </div>
                 <button
                   (click)="removeLink(i)"
-                  class="text-red-600 hover:text-red-700 mt-2"
+                  class="btn-delete mt-1"
                   title="Delete link"
                 >
-                  <i class="fas fa-trash"></i>
+                  <i class="fas fa-trash text-sm"></i>
                 </button>
               </div>
             }
@@ -240,33 +294,44 @@
         </div>
       </div>
 
-      <!-- Contacts Management -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-gray-900">Contact Info</h2>
+      <!-- Contacts Management Card -->
+      <div class="card-brand">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-3">
+            <div class="brand-icon-bg">
+              <i class="fas fa-address-book"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">Contact Info</h2>
+          </div>
           <button
             (click)="addContact()"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+            class="px-5 py-2.5 rounded-xl text-sm btn-brand-primary"
           >
-            + Add Contact
+            <i class="fas fa-plus mr-2"></i>Add Contact
           </button>
         </div>
 
         @if (contacts.length === 0) {
-          <p class="text-gray-500 text-center py-4">No contacts yet. Add your social media!</p>
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <i class="fas fa-address-book"></i>
+            </div>
+            <p class="text-gray-600 font-medium mb-2">No contacts yet</p>
+            <p class="text-gray-500 text-sm">Add your contact information and social media!</p>
+          </div>
         }
 
         <div class="space-y-3">
           <div cdkDropList (cdkDropListDropped)="dropContact($event)">
             @for (contact of contacts; track contact.id; let i = $index) {
-              <div cdkDrag class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg bg-white">
-                <div class="flex items-center mr-1 drag-handle" cdkDragHandle title="Drag to reorder">
-                  <i class="fas fa-grip-vertical text-gray-400 text-base"></i>
+              <div cdkDrag class="drag-item">
+                <div class="drag-handle" cdkDragHandle title="Drag to reorder">
+                  <i class="fas fa-grip-vertical text-lg"></i>
                 </div>
-                <div class="flex-1 space-y-2">
+                <div class="flex-1 space-y-3">
                   <select
                     [(ngModel)]="contact.platform"
-                    class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    class="select-brand cursor-pointer"
                   >
                     <option value="email">Email</option>
                     <option value="phone">Phone</option>
@@ -277,13 +342,13 @@
                     <input
                       type="text"
                       [(ngModel)]="contact.label"
-                      class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 mb-2"
-                      placeholder="Location Name (e.g. Main Branch, Downtown Office)"
+                      class="input-brand"
+                      placeholder="Location Name (e.g., Main Branch, Downtown Office)"
                     />
                     <input
                       type="text"
                       [(ngModel)]="contact.value"
-                      class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      class="input-brand"
                       placeholder="Google Maps URL"
                     />
                   </ng-container>
@@ -291,17 +356,17 @@
                     <input
                       type="text"
                       [(ngModel)]="contact.value"
-                      class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                      placeholder="username or URL"
+                      class="input-brand"
+                      placeholder="Enter contact value"
                     />
                   </ng-template>
                 </div>
                 <button
                   (click)="removeContact(i)"
-                  class="text-red-600 hover:text-red-700 mt-2"
+                  class="btn-delete mt-1"
                   title="Delete contact"
                 >
-                  <i class="fas fa-trash"></i>
+                  <i class="fas fa-trash text-sm"></i>
                 </button>
               </div>
             }
@@ -309,15 +374,34 @@
         </div>
       </div>
 
-      <!-- Danger Zone -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-6 border-2 border-red-200">
-        <h2 class="text-xl font-bold text-red-600 mb-4">Danger Zone</h2>
-        <p class="text-gray-600 mb-4">Once you delete a business, there is no going back.</p>
+      <!-- Danger Zone Card -->
+      <div class="bg-gradient-to-br from-red-50 to-red-50/50 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 sm:p-8 mb-6 border-2 border-red-200">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-white text-lg"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-red-600">Danger Zone</h2>
+        </div>
+        <p class="text-gray-700 mb-6 leading-relaxed">
+          <i class="fas fa-info-circle text-red-500 mr-1"></i>
+          Once you delete a business, there is no going back. All your links, contacts, and analytics will be permanently removed.
+        </p>
         <button
           (click)="deleteBusiness()"
-          class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          class="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 font-semibold shadow-md hover:shadow-lg"
         >
-          Delete Business
+          <i class="fas fa-trash-alt mr-2"></i>Delete Business
+        </button>
+      </div>
+
+      <!-- Bottom Save Button (Mobile Sticky) -->
+      <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t border-gray-200 shadow-lg sm:hidden z-20">
+        <button
+          (click)="saveBusiness()"
+          [disabled]="saving"
+          class="w-full px-6 py-3.5 rounded-xl font-bold btn-brand-primary"
+        >
+          <i class="fas fa-save mr-2"></i>{{ saving ? 'Saving...' : 'Save All Changes' }}
         </button>
       </div>
     </div>
