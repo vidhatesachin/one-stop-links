@@ -24,7 +24,8 @@
     </div>
   } @else if (business) {
     <!-- Main Container Card -->
-    <div class="max-w-md mx-auto bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 animate-fadeInUp">
+    <div class="max-w-md mx-auto backdrop-blur-sm rounded-3xl shadow-2xl p-8 animate-fadeInUp"
+         [style.background]="'linear-gradient(135deg, ' + lightenColor(business.primaryColor, 97) + ' 0%, ' + lightenColor(business.primaryColor, 99) + ' 100%)'">
       
       <!-- Logo/Profile Section -->
       <div class="text-center mb-8">
@@ -50,7 +51,7 @@
         }
         
         <!-- Business Name -->
-        <h1 class="business-title">
+        <h1 class="business-title" [style.color]="business.primaryColor">
           {{ business.name }}
         </h1>
 
@@ -59,20 +60,19 @@
           <div class="flex justify-center items-center gap-4 mt-6">
             @for (contact of getQuickContacts(); track contact.id) {
               <a 
-                [href]="getContactUrl(contact)" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                (click)="trackContactClick(contact.id)"
-                class="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                href="#"
+                (click)="trackContactClick(contact); $event.preventDefault();"
+                class="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 [ngClass]="getContactButtonClass(contact.platform)"
                 [title]="contact.platform"
               >
                 <ng-container [ngSwitch]="contact.platform.toLowerCase()">
-                  <i *ngSwitchCase="'whatsapp'" class="fab fa-whatsapp text-lg"></i>
-                  <i *ngSwitchCase="'email'" class="fas fa-envelope text-lg"></i>
-                  <i *ngSwitchCase="'phone'" class="fas fa-phone text-lg"></i>
-                  <i *ngSwitchCase="'location'" class="fas fa-location-dot text-lg"></i>
-                  <i *ngSwitchDefault class="fas fa-link text-lg"></i>
+                  <i *ngSwitchCase="'whatsapp'" class="fab fa-whatsapp" style="font-size: 1.2rem;"></i>
+                  <i *ngSwitchCase="'email'" class="fas fa-envelope" style="font-size: 1.2rem;"></i>
+                  <i *ngSwitchCase="'phone'" class="fas fa-phone" style="font-size: 1.2rem;"></i>
+                  <i *ngSwitchCase="'location'" class="fas fa-location-dot" style="font-size: 1.2rem;"></i>
+                  <i *ngSwitchCase="'map'" class="fas fa-map-marker-alt" style="font-size: 1.2rem;"></i>
+                  <i *ngSwitchDefault class="fas fa-link" style="font-size: 1.2rem;"></i>
                 </ng-container>
               </a>
             }
@@ -129,10 +129,8 @@
         <!-- Additional Contacts as Cards -->
         @for (contact of getAdditionalContacts(); track contact.id) {
           <a 
-            [href]="getContactUrl(contact)" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            (click)="trackContactClick(contact.id)"
+            href="#"
+            (click)="trackContactClick(contact); $event.preventDefault();"
             class="flex flex-col items-center justify-center p-5 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 min-h-[110px] group"
             [ngClass]="getLinkButtonClass(contact.platform)"
           >

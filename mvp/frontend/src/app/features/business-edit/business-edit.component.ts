@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,11 +11,21 @@ import { NotificationService } from '../../core/services/notification.service';
 @Component({
   selector: 'app-business-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, LogoUploaderComponent],
+  imports: [CommonModule, FormsModule, LogoUploaderComponent, DragDropModule],
   templateUrl: './business-edit.component.html',
   styleUrls: ['./business-edit.component.css'],
 })
 export class BusinessEditComponent implements OnInit {
+  // Drag-and-drop handlers for links and contacts
+  dropLink(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.links, event.previousIndex, event.currentIndex);
+    this.links.forEach((link: any, i: number) => link.order = i);
+  }
+
+  dropContact(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.contacts, event.previousIndex, event.currentIndex);
+    this.contacts.forEach((contact: any, i: number) => contact.order = i);
+  }
   business: Business | null = null;
   loading = false;
   saving = false;
@@ -106,10 +117,16 @@ export class BusinessEditComponent implements OnInit {
   }
 
   addContact(): void {
+    // Prevent adding more than one map contact
+    const mapCount = this.contacts.filter(c => c.platform === 'map').length;
+    if (mapCount >= 1) {
+      return;
+    }
     this.contacts.push({
       id: `temp-${Date.now()}`,
       platform: 'email',
       value: '',
+      label: '',
       isActive: true,
       order: this.contacts.length,
     });

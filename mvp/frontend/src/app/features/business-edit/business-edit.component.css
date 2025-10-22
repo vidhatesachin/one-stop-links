@@ -1,3 +1,15 @@
+/* Drag handle only visible on hover */
+.drag-handle {
+  opacity: 0;
+  transition: opacity 0.2s;
+  width: 18px;
+  min-width: 18px;
+  justify-content: center;
+  cursor: grab;
+}
+.cdk-drag:hover .drag-handle {
+  opacity: 1;
+}
 /* Business Edit Component Styles */
 
 :host {

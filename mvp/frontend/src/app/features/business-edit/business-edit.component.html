@@ -31,7 +31,7 @@
   <!-- Edit Form -->
   @if (!loading && business) {
     <div class="container mx-auto px-4 py-8 max-w-4xl">
-      <!-- Basic Information -->
+  <!-- Basic Information -->
       <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
         <h2 class="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
         
@@ -207,31 +207,36 @@
         }
 
         <div class="space-y-3">
-          @for (link of links; track link.id; let i = $index) {
-            <div class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg">
-              <div class="flex-1 space-y-2">
-                <input
-                  type="text"
-                  [(ngModel)]="link.title"
-                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                  placeholder="Link Title"
-                />
-                <input
-                  type="url"
-                  [(ngModel)]="link.url"
-                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                  placeholder="https://example.com"
-                />
+          <div cdkDropList (cdkDropListDropped)="dropLink($event)">
+            @for (link of links; track link.id; let i = $index) {
+              <div cdkDrag class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg bg-white">
+                <div class="flex items-center mr-1 drag-handle" cdkDragHandle title="Drag to reorder">
+                  <i class="fas fa-grip-vertical text-gray-400 text-base"></i>
+                </div>
+                <div class="flex-1 space-y-2">
+                  <input
+                    type="text"
+                    [(ngModel)]="link.title"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    placeholder="Link Title"
+                  />
+                  <input
+                    type="url"
+                    [(ngModel)]="link.url"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://example.com"
+                  />
+                </div>
+                <button
+                  (click)="removeLink(i)"
+                  class="text-red-600 hover:text-red-700 mt-2"
+                  title="Delete link"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
-              <button
-                (click)="removeLink(i)"
-                class="text-red-600 hover:text-red-700 mt-2"
-                title="Delete link"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
 
@@ -252,39 +257,49 @@
         }
 
         <div class="space-y-3">
-          @for (contact of contacts; track contact.id; let i = $index) {
-            <div class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg">
-              <div class="flex-1 space-y-2">
-                <select
-                  [(ngModel)]="contact.platform"
-                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          <div cdkDropList (cdkDropListDropped)="dropContact($event)">
+            @for (contact of contacts; track contact.id; let i = $index) {
+              <div cdkDrag class="flex gap-3 items-start p-4 border border-gray-200 rounded-lg bg-white">
+                <div class="flex items-center mr-1 drag-handle" cdkDragHandle title="Drag to reorder">
+                  <i class="fas fa-grip-vertical text-gray-400 text-base"></i>
+                </div>
+                <div class="flex-1 space-y-2">
+                  <select
+                    [(ngModel)]="contact.platform"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="email">Email</option>
+                    <option value="phone">Phone</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="map">Google Map Location</option>
+                  </select>
+                  <ng-container *ngIf="contact.platform === 'map'; else normalContact">
+                    <input
+                      type="text"
+                      [(ngModel)]="contact.value"
+                      class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      placeholder="Google Maps URL"
+                    />
+                  </ng-container>
+                  <ng-template #normalContact>
+                    <input
+                      type="text"
+                      [(ngModel)]="contact.value"
+                      class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      placeholder="username or URL"
+                    />
+                  </ng-template>
+                </div>
+                <button
+                  (click)="removeContact(i)"
+                  class="text-red-600 hover:text-red-700 mt-2"
+                  title="Delete contact"
                 >
-                  <option value="email">Email</option>
-                  <option value="phone">Phone</option>
-                  <option value="whatsapp">WhatsApp</option>
-                  <option value="twitter">Twitter</option>
-                  <option value="instagram">Instagram</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="github">GitHub</option>
-                  <option value="youtube">YouTube</option>
-                </select>
-                <input
-                  type="text"
-                  [(ngModel)]="contact.value"
-                  class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                  placeholder="username or URL"
-                />
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
-              <button
-                (click)="removeContact(i)"
-                class="text-red-600 hover:text-red-700 mt-2"
-                title="Delete contact"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          }
+            }
+          </div>
         </div>
       </div>
 

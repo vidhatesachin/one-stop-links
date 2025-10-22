@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationService } from '../../core/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { BusinessService } from '../../core/services/business.service';
@@ -21,7 +22,8 @@ export class PreviewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private businessService: BusinessService
+    private businessService: BusinessService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +60,7 @@ export class PreviewComponent implements OnInit {
       whatsapp: 'whatsapp',
       email: 'email',
       phone: 'phone',
+      map: 'map-marker-alt',
       location: 'location',
     };
     return classes[platform.toLowerCase()] || '';
@@ -116,7 +119,7 @@ export class PreviewComponent implements OnInit {
   // Separate quick contacts (WhatsApp, Email, Phone, Location) for top row
   getQuickContacts(): any[] {
     if (!this.business?.contacts) return [];
-    const quickPlatforms = ['whatsapp', 'email', 'phone', 'location'];
+    const quickPlatforms = ['whatsapp', 'email', 'phone', 'location', 'map'];
     return this.business.contacts.filter(c => 
       quickPlatforms.includes(c.platform.toLowerCase())
     ).slice(0, 4);
@@ -125,7 +128,7 @@ export class PreviewComponent implements OnInit {
   // Get remaining contacts for card grid
   getAdditionalContacts(): any[] {
     if (!this.business?.contacts) return [];
-    const quickPlatforms = ['whatsapp', 'email', 'phone', 'location'];
+    const quickPlatforms = ['whatsapp', 'email', 'phone', 'location', 'map'];
     return this.business.contacts.filter(c => 
       !quickPlatforms.includes(c.platform.toLowerCase())
     );
@@ -137,6 +140,7 @@ export class PreviewComponent implements OnInit {
       email: 'bg-red-500 hover:bg-red-600',
       phone: 'bg-blue-500 hover:bg-blue-600',
       location: 'bg-red-600 hover:bg-red-700',
+      map: 'bg-red-600 hover:bg-red-700',
     };
     return classes[platform.toLowerCase()] || 'bg-gray-500 hover:bg-gray-600';
   }
@@ -336,6 +340,7 @@ export class PreviewComponent implements OnInit {
       email: '✉️',
       phone: '📞',
       whatsapp: '💬',
+      map: '📍',
       twitter: '🐦',
       instagram: '📷',
       facebook: '👥',
@@ -354,6 +359,7 @@ export class PreviewComponent implements OnInit {
       email: `mailto:${value}`,
       phone: `tel:${value}`,
       whatsapp: `https://wa.me/${value}`,
+      map: value, // Google Maps URL should be provided as-is
       twitter: `https://twitter.com/${value}`,
       instagram: `https://instagram.com/${value}`,
       facebook: `https://facebook.com/${value}`,
@@ -372,9 +378,38 @@ export class PreviewComponent implements OnInit {
     // this.http.post(`/api/analytics/click`, { linkId }).subscribe();
   }
 
-  trackContactClick(contactId: string): void {
-    // Track contact click analytics
-    console.log('Contact clicked:', contactId);
-    // TODO: Send analytics to backend
+  trackContactClick(contact: any): void {
+    if (contact.platform && (contact.platform.toLowerCase() === 'map' || contact.platform.toLowerCase() === 'location')) {
+      // Always go directly to the map location
+      window.open(this.getContactUrl(contact), '_blank');
+    } else {
+      // Track contact click analytics
+      console.log('Contact clicked:', contact.id);
+      // TODO: Send analytics to backend
+    }
+  }
+
+
+  // Lighten a color by a percentage (0-100)
+  lightenColor(color: string, percent: number): string {
+    if (!color) return '#f5f7fa';
+    
+    // Remove # if present
+    color = color.replace('#', '');
+    
+    // Convert to RGB
+    const num = parseInt(color, 16);
+    const r = (num >> 16);
+    const g = (num >> 8) & 0x00FF;
+    const b = num & 0x0000FF;
+    
+    // Lighten by blending with white
+    const amount = percent / 100;
+    const newR = Math.round(r + (255 - r) * amount);
+    const newG = Math.round(g + (255 - g) * amount);
+    const newB = Math.round(b + (255 - b) * amount);
+    
+    // Convert back to hex
+    return '#' + ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1);
   }
 }
