@@ -194,14 +194,13 @@
                   [class.active]="theme === themeOption.value"
                   class="theme-option"
                 >
-                  <div class="theme-option-title">{{ themeOption.label }}</div>
+                  <div class="theme-option-title">
+                    @if (theme === themeOption.value) {
+                      <i class="fas fa-check-circle text-indigo-600 mr-2"></i>
+                    }
+                    {{ themeOption.label }}
+                  </div>
                   <div class="text-xs text-gray-500 mt-1.5 leading-relaxed">{{ themeOption.preview }}</div>
-                  @if (theme === themeOption.value) {
-                    <div class="mt-2 flex items-center gap-1 text-indigo-600">
-                      <i class="fas fa-check-circle text-xs"></i>
-                      <span class="text-xs font-semibold">Selected</span>
-                    </div>
-                  }
                 </button>
               }
             </div>
