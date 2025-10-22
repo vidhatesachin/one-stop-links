@@ -67,13 +67,14 @@
           <div class="group">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
               URL Slug <span class="required-indicator">*</span>
+              <span class="text-xs font-normal text-gray-500 ml-1">(Your unique link to set in bio)</span>
             </label>
-            <div class="flex items-center gap-2 p-1 border-2 border-gray-200 rounded-xl focus-within:border-indigo-600 focus-within:shadow-sm transition-all duration-200 hover:border-gray-300">
+            <div class="flex items-center gap-0 p-1 border-2 border-gray-200 rounded-xl focus-within:border-indigo-600 focus-within:shadow-sm transition-all duration-200 hover:border-gray-300">
               <span class="pl-3 text-gray-500 font-medium text-sm">onestoplink.bio/</span>
               <input
                 type="text"
                 [(ngModel)]="slug"
-                class="flex-1 px-2 py-2 border-0 focus:ring-0 focus:outline-none"
+                class="flex-1 px-1 py-2 border-0 focus:ring-0 focus:outline-none"
                 placeholder="your-business"
                 pattern="[a-z0-9-]+"
               />
