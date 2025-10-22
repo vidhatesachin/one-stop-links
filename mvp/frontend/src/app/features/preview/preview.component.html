@@ -69,7 +69,8 @@
     </div>
   } @else if (business) {
     <!-- Main Container Card -->
-    <div class="max-w-md mx-auto rounded-3xl shadow-2xl p-8 animate-fadeInUp"
+    <div class="w-full max-w-md mx-auto rounded-3xl shadow-2xl p-8 animate-fadeInUp"
+         style="min-height: 820px;"
          [ngClass]="getThemeClasses()"
          [style.background]="business.theme === 'modern' ? 'linear-gradient(135deg, ' + lightenColor(business.primaryColor, 97) + ' 0%, ' + lightenColor(business.primaryColor, 99) + ' 100%)' : null">
       
@@ -143,7 +144,7 @@
             class="flex flex-col items-center justify-center p-5 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 min-h-[110px] group"
             [ngClass]="getLinkButtonClass(link.title)"
           >
-            <div class="text-4xl mb-2 flex items-center justify-center">
+            <div class="text-3-5xl mb-2 flex items-center justify-center">
               <ng-container [ngSwitch]="true">
                 <i *ngSwitchCase="link.title.toLowerCase().includes('instagram') || link.title.toLowerCase().includes('insta')" class="fab fa-instagram"></i>
                 <i *ngSwitchCase="link.title.toLowerCase().includes('facebook') || link.title.toLowerCase().includes('fb')" class="fab fa-facebook"></i>
@@ -219,14 +220,6 @@
           </a>
         }
       </div>
-
-      <!-- Footer -->
-      <footer class="text-center pt-6 border-t border-gray-200 text-gray-600 text-sm">
-        <p class="mb-1">&copy; {{ currentYear }} {{ business.name }}. All rights reserved.</p>
-        <p class="text-xs text-gray-500">
-          Powered by <span class="font-bold text-purple-600">OneLinks</span>
-        </p>
-      </footer>
     </div>
   }
 </div>

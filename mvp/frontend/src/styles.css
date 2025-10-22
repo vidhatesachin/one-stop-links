@@ -13,3 +13,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+.text-3-5xl{
+  font-size: 2rem;
+  line-height: 2.5rem;
+}

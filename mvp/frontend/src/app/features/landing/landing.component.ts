@@ -43,7 +43,7 @@ export class LandingComponent {
         '10 Links',
         'Basic Analytics',
         '1 Theme',
-        'onelinks.bio/yourname',
+        'onestoplink.bio/yourname',
       ],
     },
     {

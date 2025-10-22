@@ -62,12 +62,20 @@ export class AppToolbarComponent implements OnInit {
     // Check if in preview mode
     this.isPreviewMode = url.includes('mode=preview');
     
+    // Check if on a preview/slug page (any route that's not /dashboard, /edit, /login, /auth, etc.)
+    const isPreviewPage = !url.startsWith('/dashboard') && 
+                          !url.startsWith('/edit') && 
+                          !url.startsWith('/login') && 
+                          !url.startsWith('/auth') && 
+                          !url.startsWith('/settings') &&
+                          url !== '/';
+    
     // Show toolbar if user is authenticated (has token) and not on hidden routes
     // This will show the toolbar immediately on refresh, even before user data is fully loaded
     const isAuthenticated = this.authService.isAuthenticated();
     
-    // Show toolbar if authenticated and not on hidden routes
-    this.showToolbar = isAuthenticated && !isHiddenRoute && !this.isPreviewMode;
+    // Show toolbar if authenticated and not on hidden routes, preview mode, or preview pages
+    this.showToolbar = isAuthenticated && !isHiddenRoute && !this.isPreviewMode && !isPreviewPage;
   }
 
   toggleProfileMenu(): void {
