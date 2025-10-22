@@ -84,18 +84,20 @@
             </p>
           </div>
 
-          <!-- Bio -->
-          <div class="group">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
-              Bio / Description
-            </label>
-            <textarea
-              [(ngModel)]="bio"
-              rows="4"
-              class="textarea-brand resize-none"
-              placeholder="Tell people about your business..."
-            ></textarea>
-          </div>
+          <!-- Bio (Hidden for now) -->
+          @if (false) {
+            <div class="group">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                Bio / Description
+              </label>
+              <textarea
+                [(ngModel)]="bio"
+                rows="4"
+                class="textarea-brand resize-none"
+                placeholder="Tell people about your business..."
+              ></textarea>
+            </div>
+          }
 
           <!-- Logo Upload -->
           <div class="group">

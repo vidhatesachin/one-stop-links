@@ -18,6 +18,25 @@ export interface ConfirmDialog {
   onCancel?: () => void;
 }
 
+export interface InputDialog {
+  title: string;
+  message?: string;
+  inputs: {
+    id: string;
+    label: string;
+    type: 'text' | 'email' | 'password' | 'url';
+    placeholder?: string;
+    required?: boolean;
+    pattern?: string;
+    patternMessage?: string;
+    value?: string;
+  }[];
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: (values: Record<string, string>) => void;
+  onCancel?: () => void;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,6 +46,9 @@ export class NotificationService {
 
   private confirmDialogSubject = new BehaviorSubject<ConfirmDialog | null>(null);
   public confirmDialog$ = this.confirmDialogSubject.asObservable();
+
+  private inputDialogSubject = new BehaviorSubject<InputDialog | null>(null);
+  public inputDialog$ = this.inputDialogSubject.asObservable();
 
   success(title: string, message = '', duration = 3000): void {
     this.addNotification('success', title, message, duration);
@@ -70,6 +92,39 @@ export class NotificationService {
 
   closeConfirmDialog(): void {
     this.confirmDialogSubject.next(null);
+  }
+
+  input(config: {
+    title: string;
+    message?: string;
+    inputs: InputDialog['inputs'];
+    confirmText?: string;
+    cancelText?: string;
+  }): Observable<Record<string, string> | null> {
+    const subject = new Subject<Record<string, string> | null>();
+    
+    const dialog: InputDialog = {
+      ...config,
+      confirmText: config.confirmText || 'Submit',
+      cancelText: config.cancelText || 'Cancel',
+      onConfirm: (values) => {
+        subject.next(values);
+        subject.complete();
+        this.closeInputDialog();
+      },
+      onCancel: () => {
+        subject.next(null);
+        subject.complete();
+        this.closeInputDialog();
+      }
+    };
+    
+    this.inputDialogSubject.next(dialog);
+    return subject.asObservable();
+  }
+
+  closeInputDialog(): void {
+    this.inputDialogSubject.next(null);
   }
 
   private addNotification(type: Notification['type'], title: string, message: string, duration?: number): void {

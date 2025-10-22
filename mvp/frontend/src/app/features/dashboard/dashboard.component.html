@@ -1,52 +1,107 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Main Content -->
-  <main class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex justify-between items-center">
-      <div>
-        <h2 class="text-3xl font-bold text-gray-900 mb-2">Your Businesses</h2>
-        <p class="text-gray-600">Manage your landing pages and links</p>
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-gray-50">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div class="dashboard-header-content">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-bold brand-gradient-text mb-2">
+            Your Businesses
+          </h1>
+          <p class="text-gray-600 flex items-center gap-2">
+            <i class="fas fa-store text-indigo-600"></i>
+            Manage your landing pages and links
+          </p>
+        </div>
+        @if (businesses.length > 0) {
+          <div class="flex items-center gap-3">
+            <div class="stats-badge">
+              <i class="fas fa-building"></i>
+              <span>{{ businesses.length }} {{ businesses.length === 1 ? 'Business' : 'Businesses' }}</span>
+            </div>
+            <button 
+              (click)="createBusiness()"
+              class="px-6 py-3 rounded-xl btn-brand-primary flex items-center gap-2"
+            >
+              <i class="fas fa-plus"></i>
+              <span>Create Business</span>
+            </button>
+          </div>
+        }
       </div>
-      @if (businesses.length > 0) {
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+    @if (businesses.length === 0) {
+      <div class="empty-state">
+        <div class="empty-state-icon">🚀</div>
+        <h3 class="empty-state-title">Get Started with Your First Business</h3>
+        <p class="empty-state-description">
+          Create your first business profile to start sharing your links and grow your online presence
+        </p>
         <button 
           (click)="createBusiness()"
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 flex items-center gap-2"
+          class="px-6 py-3 rounded-xl btn-brand-primary inline-flex items-center gap-2"
         >
           <i class="fas fa-plus"></i>
-          <span>Create Business</span>
-        </button>
-      }
-    </div>
-
-    @if (businesses.length === 0) {
-      <div class="bg-white rounded-xl shadow-lg p-12 text-center">
-        <div class="text-6xl mb-4">🚀</div>
-        <h3 class="text-2xl font-bold text-gray-900 mb-2">Get Started</h3>
-        <p class="text-gray-600 mb-6">Create your first business profile to start sharing your links</p>
-        <button 
-          (click)="createBusiness()"
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
-        >
-          Create Business
+          <span>Create Your First Business</span>
         </button>
       </div>
     } @else {
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="business-grid">
         @for (business of businesses; track business.id) {
-          <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ business.name }}</h3>
-            <p class="text-gray-600 text-sm mb-4">onestoplink.bio/{{ business.slug }}</p>
-            <div class="flex gap-2">
+          <div class="business-card">
+            <!-- Logo -->
+            @if (business.logo) {
+              <img 
+                [src]="business.logo" 
+                [alt]="business.name + ' logo'"
+                class="business-card-logo"
+              />
+            } @else {
+              <div class="business-card-logo bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center">
+                <i class="fas fa-building text-indigo-600 text-2xl"></i>
+              </div>
+            }
+            
+            <!-- Business Info -->
+            <div class="flex-1">
+              <h3 class="business-card-title">{{ business.name }}</h3>
+              <p class="business-card-slug">
+                <i class="fas fa-link"></i>
+                <span>onestoplink.bio/{{ business.slug }}</span>
+              </p>
+              
+              <!-- Published Badge -->
+              @if (business.published) {
+                <div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-50 text-green-700 rounded-full text-xs font-semibold border border-green-200">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Published</span>
+                </div>
+              } @else {
+                <div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold border border-gray-200">
+                  <i class="fas fa-eye-slash"></i>
+                  <span>Draft</span>
+                </div>
+              }
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="business-card-actions">
               <button 
                 (click)="editBusiness(business)"
-                class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                class="flex-1 px-4 py-2.5 rounded-lg btn-brand-primary flex items-center justify-center gap-2"
               >
-                Edit
+                <i class="fas fa-edit"></i>
+                <span>Edit</span>
               </button>
               <button 
                 (click)="viewBusiness(business)"
-                class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                class="flex-1 px-4 py-2.5 rounded-lg btn-brand-secondary flex items-center justify-center gap-2"
               >
-                View
+                <i class="fas fa-eye"></i>
+                <span>View</span>
               </button>
             </div>
           </div>

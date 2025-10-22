@@ -20,7 +20,7 @@
 
 @keyframes scale-in {
   from {
-    transform: scale(0.9);
+    transform: scale(0.95);
     opacity: 0;
   }
   to {
@@ -30,7 +30,7 @@
 }
 
 .animate-slide-in {
-  animation: slide-in 0.3s ease-out;
+  animation: slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-fade-in {
@@ -38,5 +38,10 @@
 }
 
 .animate-scale-in {
-  animation: scale-in 0.2s ease-out;
+  animation: scale-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus trap for dialogs */
+.dialog-focus-trap {
+  outline: none;
 }

@@ -34,11 +34,16 @@
     ></div>
     
     <!-- Dialog -->
-    <div class="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 animate-scale-in">
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 animate-scale-in">
       <!-- Header -->
-      <div class="px-6 py-4 border-b border-gray-200">
+      <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-red-50 to-red-50/50">
         <div class="flex items-center justify-between">
-          <h3 class="text-xl font-bold text-gray-900">{{ dialog.title }}</h3>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center">
+              <i class="fas fa-exclamation-triangle text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">{{ dialog.title }}</h3>
+          </div>
           <button 
             (click)="closeDialog()"
             class="text-gray-400 hover:text-gray-600 transition-colors"
@@ -49,23 +54,106 @@
       </div>
       
       <!-- Body -->
-      <div class="px-6 py-4">
-        <p class="text-gray-700">{{ dialog.message }}</p>
+      <div class="px-6 py-5">
+        <p class="text-gray-700 leading-relaxed">{{ dialog.message }}</p>
       </div>
       
       <!-- Footer -->
-      <div class="px-6 py-4 bg-gray-50 rounded-b-xl flex justify-end gap-3">
+      <div class="px-6 py-4 bg-gray-50 rounded-b-2xl flex justify-end gap-3">
         <button
           (click)="onCancel()"
-          class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium transition-colors"
+          class="px-5 py-2.5 bg-white border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 font-semibold transition-all duration-200"
         >
           {{ dialog.cancelText || 'Cancel' }}
         </button>
         <button
           (click)="onConfirm()"
-          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors"
+          class="px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
         >
           {{ dialog.confirmText || 'Confirm' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Input Dialog Modal -->
+@if (inputDialog$ | async; as dialog) {
+  <div class="fixed inset-0 z-[10000] flex items-center justify-center">
+    <!-- Backdrop -->
+    <div 
+      class="absolute inset-0 bg-black bg-opacity-50 transition-opacity animate-fade-in"
+      (click)="closeInputDialog()"
+    ></div>
+    
+    <!-- Dialog -->
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 animate-scale-in">
+      <!-- Header -->
+      <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-indigo-50/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl flex items-center justify-center">
+              <i class="fas fa-plus text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">{{ dialog.title }}</h3>
+          </div>
+          <button 
+            (click)="closeInputDialog()"
+            class="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        @if (dialog.message) {
+          <p class="text-sm text-gray-600 mt-2">{{ dialog.message }}</p>
+        }
+      </div>
+      
+      <!-- Body -->
+      <div class="px-6 py-6">
+        <div class="space-y-4">
+          @for (input of dialog.inputs; track input.id) {
+            <div>
+              <label [for]="input.id" class="block text-sm font-semibold text-gray-700 mb-2">
+                {{ input.label }}
+                @if (input.required) {
+                  <span class="text-red-500">*</span>
+                }
+              </label>
+              <input
+                [id]="input.id"
+                [type]="input.type"
+                [(ngModel)]="inputValues[input.id]"
+                [placeholder]="input.placeholder || ''"
+                class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all duration-200 outline-none"
+                [class.border-red-300]="inputErrors[input.id]"
+                [class.focus:border-red-500]="inputErrors[input.id]"
+                [class.focus:ring-red-100]="inputErrors[input.id]"
+              />
+              @if (inputErrors[input.id]) {
+                <p class="text-red-600 text-xs mt-1.5 flex items-center gap-1">
+                  <i class="fas fa-exclamation-circle"></i>
+                  {{ inputErrors[input.id] }}
+                </p>
+              }
+            </div>
+          }
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="px-6 py-4 bg-gray-50 rounded-b-2xl flex justify-end gap-3">
+        <button
+          (click)="onInputCancel()"
+          class="px-5 py-2.5 bg-white border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 font-semibold transition-all duration-200"
+        >
+          {{ dialog.cancelText || 'Cancel' }}
+        </button>
+        <button
+          (click)="onInputConfirm()"
+          class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white rounded-xl hover:from-indigo-700 hover:to-indigo-900 font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
+        >
+          {{ dialog.confirmText || 'Submit' }}
         </button>
       </div>
     </div>

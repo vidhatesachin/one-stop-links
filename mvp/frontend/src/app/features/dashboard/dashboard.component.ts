@@ -50,23 +50,46 @@ export class DashboardComponent implements OnInit {
   }
 
   createBusiness(): void {
-    // TODO: Open a modal or navigate to a form to create business
-    // For now, let's create a simple prompt-based flow
-    const name = prompt('Enter business name:');
-    if (!name) return;
+    this.notificationService.input({
+      title: 'Create New Business',
+      message: 'Enter your business details to get started',
+      inputs: [
+        {
+          id: 'name',
+          label: 'Business Name',
+          type: 'text',
+          placeholder: 'e.g., My Awesome Business',
+          required: true
+        },
+        {
+          id: 'slug',
+          label: 'URL Slug',
+          type: 'text',
+          placeholder: 'e.g., my-awesome-business',
+          required: true,
+          pattern: '^[a-z0-9-]+$',
+          patternMessage: 'Only lowercase letters, numbers, and hyphens allowed'
+        }
+      ],
+      confirmText: 'Create Business',
+      cancelText: 'Cancel'
+    }).subscribe((result) => {
+      if (!result) return; // User cancelled
 
-    const slug = prompt('Enter URL slug (e.g., mybusiness):');
-    if (!slug) return;
+      const { name, slug } = result;
 
-    this.businessService.create({ name, slug }).subscribe({
-      next: (response) => {
-        console.log('Business created:', response);
-        this.loadBusinesses(); // Reload the list
-      },
-      error: (error) => {
-        console.error('Failed to create business:', error);
-        this.notificationService.error('Failed to create business: ' + (error.error?.message || 'Unknown error'));
-      },
+      this.businessService.create({ name, slug }).subscribe({
+        next: (response) => {
+          console.log('Business created:', response);
+          this.notificationService.success('Success!', `Business "${name}" created successfully`);
+          // Navigate to edit page immediately
+          this.router.navigate(['/business', response.business.id, 'edit']);
+        },
+        error: (error) => {
+          console.error('Failed to create business:', error);
+          this.notificationService.error('Failed to create business', error.error?.message || 'Unknown error');
+        },
+      });
     });
   }
 

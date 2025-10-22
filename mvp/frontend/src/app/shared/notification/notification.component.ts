@@ -1,18 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { NotificationService, Notification } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
 export class NotificationComponent implements OnInit {
   notifications: Notification[] = [];
   confirmDialog$ = this.notificationService.confirmDialog$;
+  inputDialog$ = this.notificationService.inputDialog$;
   currentDialog: any = null;
+  currentInputDialog: any = null;
+  inputValues: Record<string, string> = {};
+  inputErrors: Record<string, string> = {};
 
   constructor(private notificationService: NotificationService) {}
 
@@ -23,6 +28,18 @@ export class NotificationComponent implements OnInit {
     
     this.confirmDialog$.subscribe(dialog => {
       this.currentDialog = dialog;
+    });
+
+    this.inputDialog$.subscribe(dialog => {
+      this.currentInputDialog = dialog;
+      if (dialog) {
+        // Initialize input values with defaults
+        this.inputValues = {};
+        this.inputErrors = {};
+        dialog.inputs.forEach((input: any) => {
+          this.inputValues[input.id] = input.value || '';
+        });
+      }
     });
   }
 
@@ -66,5 +83,55 @@ export class NotificationComponent implements OnInit {
 
   closeDialog(): void {
     this.notificationService.closeConfirmDialog();
+  }
+
+  onInputConfirm(): void {
+    if (!this.currentInputDialog) return;
+
+    // Validate inputs
+    this.inputErrors = {};
+    let hasErrors = false;
+
+    this.currentInputDialog.inputs.forEach((input: any) => {
+      const value = this.inputValues[input.id]?.trim() || '';
+
+      // Check required
+      if (input.required && !value) {
+        this.inputErrors[input.id] = `${input.label} is required`;
+        hasErrors = true;
+        return;
+      }
+
+      // Check pattern
+      if (value && input.pattern) {
+        const regex = new RegExp(input.pattern);
+        if (!regex.test(value)) {
+          this.inputErrors[input.id] = input.patternMessage || `Invalid ${input.label.toLowerCase()}`;
+          hasErrors = true;
+          return;
+        }
+      }
+    });
+
+    if (hasErrors) {
+      return;
+    }
+
+    // All valid, proceed
+    if (this.currentInputDialog.onConfirm) {
+      this.currentInputDialog.onConfirm(this.inputValues);
+    }
+    this.notificationService.closeInputDialog();
+  }
+
+  onInputCancel(): void {
+    if (this.currentInputDialog?.onCancel) {
+      this.currentInputDialog.onCancel();
+    }
+    this.notificationService.closeInputDialog();
+  }
+
+  closeInputDialog(): void {
+    this.notificationService.closeInputDialog();
   }
 }
