@@ -19,6 +19,8 @@ export class PreviewComponent implements OnInit {
   error = false;
   currentYear = new Date().getFullYear();
   isPreviewMode = false;
+  showLocationList = false;
+  mapLocations: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -52,7 +54,63 @@ export class PreviewComponent implements OnInit {
   }
 
   getThemeClasses(): string {
-    return 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200';
+    if (!this.business) return '';
+    
+    switch (this.business.theme) {
+      case 'modern':
+        return 'theme-modern';
+      case 'gradient':
+        return 'theme-gradient';
+      case 'glassmorphism':
+        return 'theme-glass';
+      case 'brutalist':
+        return 'theme-brutalist';
+      case 'neon':
+        return 'theme-neon';
+      default:
+        return 'theme-modern';
+    }
+  }
+
+  getPageBackgroundClass(): string {
+    if (!this.business) return '';
+    
+    switch (this.business.theme) {
+      case 'modern':
+        return 'bg-modern';
+      case 'gradient':
+        return ''; // Will use inline style for dynamic gradient
+      case 'glassmorphism':
+        return 'bg-glass';
+      case 'brutalist':
+        return 'bg-brutalist';
+      case 'neon':
+        return 'bg-neon';
+      default:
+        return 'bg-modern';
+    }
+  }
+
+  getPageBackgroundStyle(): string {
+    if (!this.business || this.business.theme !== 'gradient') return '';
+    
+    const color = this.business.primaryColor;
+    const color1 = this.lightenColor(color, 60);
+    const color2 = this.lightenColor(color, 75);
+    const color3 = this.lightenColor(color, 85);
+    
+    return `linear-gradient(135deg, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
+  }
+
+  getGradientCardBackground(): string {
+    if (!this.business || this.business.theme !== 'gradient') return '';
+    
+    const color = this.business.primaryColor;
+    const titleColor1 = this.adjustColor(color, -10);
+    const titleColor2 = this.adjustColor(color, 20);
+    
+    // Return gradient for title text
+    return `linear-gradient(135deg, ${titleColor1} 0%, ${titleColor2} 100%)`;
   }
 
   getContactIconClass(platform: string): string {
@@ -380,13 +438,40 @@ export class PreviewComponent implements OnInit {
 
   trackContactClick(contact: any): void {
     if (contact.platform && (contact.platform.toLowerCase() === 'map' || contact.platform.toLowerCase() === 'location')) {
-      // Always go directly to the map location
+      // Smart display: check how many map locations exist
+      const allMapContacts = (this.business?.contacts || []).filter(c => 
+        c.platform && (c.platform.toLowerCase() === 'map' || c.platform.toLowerCase() === 'location')
+      );
+      
+      if (allMapContacts.length === 1) {
+        // Single location: navigate directly
+        window.open(this.getContactUrl(allMapContacts[0]), '_blank');
+      } else if (allMapContacts.length > 1) {
+        // Multiple locations: show selector modal
+        this.mapLocations = allMapContacts;
+        this.showLocationList = true;
+      }
+    } else if (contact.platform && contact.platform.toLowerCase() === 'whatsapp') {
+      // WhatsApp - open in new tab
       window.open(this.getContactUrl(contact), '_blank');
+      console.log('Contact clicked:', contact.id);
     } else {
+      // For phone, email - open the action directly in same tab
+      window.location.href = this.getContactUrl(contact);
+      
       // Track contact click analytics
       console.log('Contact clicked:', contact.id);
       // TODO: Send analytics to backend
     }
+  }
+
+  selectMapLocation(contact: any): void {
+    this.showLocationList = false;
+    window.open(this.getContactUrl(contact), '_blank');
+  }
+
+  closeLocationList(): void {
+    this.showLocationList = false;
   }
 
 

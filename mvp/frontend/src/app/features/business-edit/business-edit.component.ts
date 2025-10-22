@@ -117,11 +117,6 @@ export class BusinessEditComponent implements OnInit {
   }
 
   addContact(): void {
-    // Prevent adding more than one map contact
-    const mapCount = this.contacts.filter(c => c.platform === 'map').length;
-    if (mapCount >= 1) {
-      return;
-    }
     this.contacts.push({
       id: `temp-${Date.now()}`,
       platform: 'email',
